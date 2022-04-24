@@ -10,29 +10,28 @@ def main():
     sys.excepthook = cef.ExceptHook
     cef.Initialize()
 
-    browser = cef.CreateBrowserSync(url='file:///H:/PythonDevelopment/Learning/testCEF/html5up-aerial/index.html',
+    browser = cef.CreateBrowserSync(url='file:///H:/PythonDevelopment/Learning/testCEF/html5/main/index.html',
                                     window_title='aerial launcher')
     if platform.system() == "Windows":
         window_handle = browser.GetOuterWindowHandle()
         insert_after_handle = 0
         SWP_NOMOVE = 0x0002
         ctypes.windll.user32.SetWindowPos(window_handle, insert_after_handle, 0, 0, 1440, 810, SWP_NOMOVE)
+        
 
     set_javascript_bindings(browser)
     cef.MessageLoop()
     cef.Shutdown()
 
 
-class SecondWindow(object):
-
+class LoginPanel(object):
     def __init__(self, browser):
         self.browser = browser
-
-    def newWindow(self):
-        newBrowser = cef.CreateBrowserSync(url='https://www.youtube.com', window_title='aerial_window')
+    
+    def ask_login_data(self):
+        print('access login')
         
-
-
+    
 
 class External(object):
     target_dir_path = ''
@@ -55,16 +54,13 @@ def py_confirm(path):
 def py_log(msg):
     print(msg)
 
-
 def set_javascript_bindings(browser):
     external = External(browser)
-    secondWindow = SecondWindow(browser)
     bindings = cef.JavascriptBindings(bindToFrames=False, bindToPopups=False)
 
     bindings.SetFunction('py_confirm', py_confirm)
     bindings.SetFunction('py_log', py_log)
     bindings.SetObject('external', external)
-    bindings.SetObject('secondWindow', secondWindow)
 
     browser.SetJavascriptBindings(bindings)
 
